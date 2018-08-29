@@ -23,7 +23,18 @@ public:
 
 	virtual void Tick(float DeltaTime) override;
 
+	UPROPERTY(EditAnywhere, Meta = (MakeEditWidget = true))
+	FVector TargetLocation;
+
 private:
-	float RunningTime;
+
+	UPROPERTY(EditAnywhere)
+	float MaxSpeed = 200;
+
+
+
+	FVector OldLocation;
+
+	FVector Distance;
 
 };

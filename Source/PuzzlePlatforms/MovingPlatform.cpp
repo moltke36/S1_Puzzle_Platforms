@@ -7,6 +7,8 @@ AMovingPlatform::AMovingPlatform()
 	PrimaryActorTick.bCanEverTick = true;
 
 	SetMobility(EComponentMobility::Movable);
+
+
 }
 
 void AMovingPlatform::BeginPlay()
@@ -17,6 +19,7 @@ void AMovingPlatform::BeginPlay()
 	{
 		SetReplicates(true);
 		SetReplicateMovement(true);
+		OldLocation = GetActorLocation();
 	}
 }
 
@@ -26,9 +29,9 @@ void AMovingPlatform::Tick(float DeltaTime)
 	if (HasAuthority())
 	{
 		FVector NewLoctaion = GetActorLocation();
-		float DeltaX = FMath::Sin(RunningTime + DeltaTime) - FMath::Sin(RunningTime);
-		NewLoctaion.X += DeltaX * 1000.f;
-		RunningTime += DeltaTime;
+		float DistanceRemain = FVector::Distance(TargetLocation + OldLocation,NewLoctaion) / FVector::Distance(TargetLocation,OldLocation) ;
+		FVector DeltaVectorSpeed = FVector(FMath::Sin(2* DistanceRemain)- FMath::Sin(DistanceRemain), FMath::Sin(2 * DistanceRemain) - FMath::Sin(DistanceRemain), FMath::Sin(2 * DistanceRemain) - FMath::Sin(DistanceRemain))*TargetLocation.GetSafeNormal();
+		NewLoctaion += DeltaVectorSpeed * MaxSpeed * DeltaTime;
 		SetActorLocation(NewLoctaion);
 	}
 	
